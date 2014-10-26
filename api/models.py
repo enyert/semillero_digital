@@ -14,6 +14,9 @@ class Logro(models.Model):
     descripcion = models.TextField(max_length=350)
     puntos = models.IntegerField()
 
+    def __str__(self):
+        return "Logro: " + self.nombre + " - Puntuacion: " + str(self.puntos)
+
 class Semilla(models.Model):
     user = models.OneToOneField(User)
     profile_image = models.ImageField(upload_to='img/', null=True)
@@ -24,8 +27,7 @@ class Semilla(models.Model):
     google_url = models.CharField(max_length=100, blank=True)
     lista_amigos = models.ManyToManyField("self", symmetrical=False, null=True, blank=True)
     puntos = models.IntegerField()
-    logros_completados = models.ManyToManyField()
-    logros_no_completados = models.ManyToManyField()
+    logros_completados = models.ManyToManyField(Logro)
 
 
     def __str__(self):
@@ -38,11 +40,15 @@ class Actividad(models.Model):
     tipo = models.CharField(max_length=3, choices=TIPOS_CHOICES)
     creada = models.DateTimeField()
 
+    def __str__(self):
+        return "Actividad: " + self.nombre + " - Tipo: " + self.tipo
+
 
 class Semillero(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.TextField(max_length=350)
     creado = models.DateTimeField()
+    creador = models.ForeignKey(Semilla)
     actividades = models.ManyToManyField(Actividad)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
@@ -53,7 +59,10 @@ class Semillero(models.Model):
     facebook_url = models.CharField(max_length=100, blank=True)
     twitter_url = models.CharField(max_length=100, blank=True)
     google_url = models.CharField(max_length=100, blank=True)
-    lista_semillas = models.ManyToManyField(Semilla)
+    lista_semillas = models.ManyToManyField(Semilla, related_name="Semillas")
+
+    def __str__(self):
+        return "Semillero: " + self.nombre + " - Creado por: " + self.creador.user.username
 
 
 class Evento(models.Model):
@@ -68,3 +77,6 @@ class Evento(models.Model):
     actividades = models.ManyToManyField(Actividad)
     votos = models.IntegerField()
     puntuacion = models.IntegerField()
+
+    def __str__(self):
+        return "Evento: " + self.nombre + " - Creado por: " + self.creador.user.username
