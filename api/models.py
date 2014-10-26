@@ -9,6 +9,10 @@ AUDIENCIA_CHOICES = (('CHIL','Niños'), ('ADOL', 'Adolescentes'), ('VIEJ', 'Adul
 ROLES = (('INS', 'Instructor'), ('COM', 'Miembro Comunidad'),)
 
 
+class Logro(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField(max_length=350)
+    puntos = models.IntegerField()
 
 class Semilla(models.Model):
     user = models.OneToOneField(User)
@@ -19,7 +23,9 @@ class Semilla(models.Model):
     twitter_url = models.CharField(max_length=100, blank=True)
     google_url = models.CharField(max_length=100, blank=True)
     lista_amigos = models.ManyToManyField("self", symmetrical=False, null=True, blank=True)
-
+    puntos = models.IntegerField()
+    logros_completados = models.ManyToManyField()
+    logros_no_completados = models.ManyToManyField()
 
 
     def __str__(self):
@@ -31,7 +37,6 @@ class Actividad(models.Model):
     descripcion = models.TextField(max_length=350)
     tipo = models.CharField(max_length=3, choices=TIPOS_CHOICES)
     creada = models.DateTimeField()
-    puntuacion = models.IntegerField()
 
 
 class Semillero(models.Model):
@@ -61,3 +66,5 @@ class Evento(models.Model):
     audiencia = models.CharField(max_length=4, choices=AUDIENCIA_CHOICES)
     creado = models.DateTimeField()
     actividades = models.ManyToManyField(Actividad)
+    votos = models.IntegerField()
+    puntuacion = models.IntegerField()
