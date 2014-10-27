@@ -26,7 +26,7 @@ class Semilla(models.Model):
     twitter_url = models.CharField(max_length=100, blank=True)
     google_url = models.CharField(max_length=100, blank=True)
     lista_amigos = models.ManyToManyField("self", symmetrical=False, null=True, blank=True)
-    puntos = models.IntegerField()
+    puntos = models.IntegerField(default=0)
     logros_completados = models.ManyToManyField(Logro)
 
 
@@ -52,8 +52,8 @@ class Semillero(models.Model):
     actividades = models.ManyToManyField(Actividad)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
-    tel_local = models.CharField(max_length=20)
-    tel_movil = models.CharField(max_length=20)
+    tel_local = models.CharField(max_length=20, blank=True, null=True)
+    tel_movil = models.CharField(max_length=20, blank=True, null=True)
     correo = models.EmailField()
     puntuacion = models.IntegerField()
     facebook_url = models.CharField(max_length=100, blank=True)
@@ -75,7 +75,6 @@ class Evento(models.Model):
     audiencia = models.CharField(max_length=4, choices=AUDIENCIA_CHOICES)
     creado = models.DateTimeField()
     actividades = models.ManyToManyField(Actividad)
-    votos = models.IntegerField()
     puntuacion = models.IntegerField()
 
     def __str__(self):
