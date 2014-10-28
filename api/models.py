@@ -14,8 +14,12 @@ class Logro(models.Model):
     descripcion = models.TextField(max_length=350)
     puntos = models.IntegerField()
 
-    def __str__(self):
+    def __unicode__(self):
         return "Logro: " + self.nombre + " - Puntuacion: " + str(self.puntos)
+
+    class Meta:
+        verbose_name_plural = "Logros"
+
 
 class Semilla(models.Model):
     user = models.OneToOneField(User)
@@ -29,9 +33,11 @@ class Semilla(models.Model):
     puntos = models.IntegerField(default=0)
     logros_completados = models.ManyToManyField(Logro)
 
-
-    def __str__(self):
+    def __unicode__(self):
         return "%s's profile" % self.user
+
+    class Meta:
+        verbose_name_plural = "Semillas"
 
 
 class Actividad(models.Model):
@@ -40,8 +46,11 @@ class Actividad(models.Model):
     tipo = models.CharField(max_length=3, choices=TIPOS_CHOICES)
     creada = models.DateTimeField()
 
-    def __str__(self):
+    def __unicode__(self):
         return "Actividad: " + self.nombre + " - Tipo: " + self.tipo
+
+    class Meta:
+        verbose_name_plural = "Actividades"
 
 
 class Semillero(models.Model):
@@ -61,8 +70,11 @@ class Semillero(models.Model):
     google_url = models.CharField(max_length=100, blank=True)
     lista_semillas = models.ManyToManyField(Semilla, related_name="Semillas")
 
-    def __str__(self):
+    def __unicode__(self):
         return "Semillero: " + self.nombre + " - Creado por: " + self.creador.user.username
+
+    class Meta:
+        verbose_name_plural = "Semilleros"
 
 
 class Evento(models.Model):
@@ -77,5 +89,8 @@ class Evento(models.Model):
     actividades = models.ManyToManyField(Actividad)
     puntuacion = models.IntegerField()
 
-    def __str__(self):
+    def __unicode__(self):
         return "Evento: " + self.nombre + " - Creado por: " + self.creador.user.username
+
+    class Meta:
+        verbose_name_plural = "Eventos"
