@@ -7,6 +7,10 @@ admin.autodiscover()
 
 router = routers.DefaultRouter()
 router.register('logros', views.LogroViewSet)
+router.register('semillas', views.SemillaViewSet)
+router.register('semilleros', views.SemilleroViewSet)
+router.register('actividades', views.ActividadViewSet)
+router.register('eventos', views.EventoViewSet)
 
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),
