@@ -21,9 +21,13 @@ class Logro(models.Model):
         verbose_name_plural = "Logros"
 
 
+
+
 class Semilla(models.Model):
+    def getUsername(self, filename):
+        return '/'.join(['img', 'semillas', self.user.username, filename])
+
     user = models.OneToOneField(User)
-    profile_image = models.ImageField(upload_to='img/', null=True)
     rol = models.CharField(max_length=3, choices=ROLES)
     creada = models.DateTimeField()
     facebook_url = models.CharField(max_length=100, blank=True)
@@ -32,9 +36,12 @@ class Semilla(models.Model):
     lista_amigos = models.ManyToManyField("self", symmetrical=False, null=True, blank=True)
     puntos = models.IntegerField(default=0)
     logros_completados = models.ManyToManyField(Logro)
+    profile_image = models.ImageField(upload_to=getUsername, null=True)
 
     def __unicode__(self):
         return "%s's profile" % self.user
+
+
 
     class Meta:
         verbose_name_plural = "Semillas"

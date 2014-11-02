@@ -13,7 +13,6 @@ class LogroSerializer(serializers.ModelSerializer):
 class SemillaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Semilla
-        fields = ('id', 'user')
         depth = 1
 
 class SemilleroSerializer(serializers.ModelSerializer):
