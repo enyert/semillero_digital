@@ -21,27 +21,23 @@ class Logro(models.Model):
         verbose_name_plural = "Logros"
 
 
-
-
 class Semilla(models.Model):
-    def getUsername(self, filename):
+    def generateURL(self, filename):
         return '/'.join(['img', 'semillas', self.user.username, filename])
 
     user = models.OneToOneField(User)
     rol = models.CharField(max_length=3, choices=ROLES)
-    creada = models.DateTimeField()
+    creada = models.DateTimeField(auto_now_add=True)
     facebook_url = models.CharField(max_length=100, blank=True)
     twitter_url = models.CharField(max_length=100, blank=True)
     google_url = models.CharField(max_length=100, blank=True)
     lista_amigos = models.ManyToManyField("self", symmetrical=False, null=True, blank=True)
     puntos = models.IntegerField(default=0)
-    logros_completados = models.ManyToManyField(Logro)
-    profile_image = models.ImageField(upload_to=getUsername, null=True)
+    logros_completados = models.ManyToManyField(Logro, blank=True, null=True)
+    profile_image = models.ImageField(upload_to=generateURL, null=True, blank=True)
 
     def __unicode__(self):
         return "%s's profile" % self.user
-
-
 
     class Meta:
         verbose_name_plural = "Semillas"
@@ -63,19 +59,20 @@ class Actividad(models.Model):
 class Semillero(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.TextField(max_length=350)
-    creado = models.DateTimeField()
+    #descripcion = models.TextField(max_length=350)
+    creado = models.DateTimeField(auto_now_add=True)
     creador = models.ForeignKey(Semilla)
-    actividades = models.ManyToManyField(Actividad)
+    actividades = models.ManyToManyField(Actividad, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     tel_local = models.CharField(max_length=20, blank=True, null=True)
     tel_movil = models.CharField(max_length=20, blank=True, null=True)
-    correo = models.EmailField()
-    puntuacion = models.IntegerField()
+    correo = models.EmailField(blank=True, null=True)
+    puntuacion = models.IntegerField(default=0)
     facebook_url = models.CharField(max_length=100, blank=True)
     twitter_url = models.CharField(max_length=100, blank=True)
     google_url = models.CharField(max_length=100, blank=True)
-    lista_semillas = models.ManyToManyField(Semilla, related_name="Semillas")
+    lista_semillas = models.ManyToManyField(Semilla, related_name="Semillas", blank=True, null=True)
 
     def __unicode__(self):
         return "Semillero: " + self.nombre + " - Creado por: " + self.creador.user.username
@@ -85,6 +82,9 @@ class Semillero(models.Model):
 
 
 class Evento(models.Model):
+    def generateURL(self, filename):
+        return '/'.join(['img', 'eventos', self.creador.user.username, filename])
+
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=350)
     creador = models.ForeignKey(Semilla)
@@ -95,6 +95,7 @@ class Evento(models.Model):
     creado = models.DateTimeField()
     actividades = models.ManyToManyField(Actividad)
     puntuacion = models.IntegerField()
+    #imagen_promo = models.ImageField(upload_to=generateURL, null=True, blank=True)
 
     def __unicode__(self):
         return "Evento: " + self.nombre + " - Creado por: " + self.creador.user.username
