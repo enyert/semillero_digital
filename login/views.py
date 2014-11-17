@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
-from api.models import Semilla, Semillero
+from api.models import Semilla, Semillero, Evento
 
 
 @csrf_protect
@@ -34,9 +34,10 @@ def register(request):
 
 def register_success(request):
     return render_to_response(
-        'registration/success.html'
+        '/register/success/'
     )
 
+@login_required
 def logout_page(request):
     logout(request)
     return HttpResponseRedirect('/index')
@@ -57,7 +58,10 @@ def basicSearch(request):
         semilleros = Semillero.objects.filter(Q(creador__user__username__contains=clave)
                                             | Q(creador__user__email__contains=clave)
                                             | Q(nombre__contains=clave))
-        variables = RequestContext(request, { 'semillas':semillas, 'semilleros':semilleros })
+
+        eventos = Evento.objects.filter(Q(nombre__contains=clave))
+
+        variables = RequestContext(request, { 'semillas':semillas, 'semilleros':semilleros, 'eventos':eventos })
 
         return render_to_response('results.html', variables,)
     else:
@@ -67,6 +71,7 @@ def basicSearch(request):
 
     return render_to_response('search.html', variables,)
 
+@csrf_protect
 @login_required
 def crearSemillero(request):
     if request.method == 'POST':

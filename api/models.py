@@ -23,7 +23,7 @@ class Logro(models.Model):
 
 class Semilla(models.Model):
     def generateURL(self, filename):
-        return '/'.join(['img', 'semillas', self.user.username, filename])
+        return '/'.join(['semillas', 'avatars', self.user.username, filename])
 
     user = models.OneToOneField(User)
     rol = models.CharField(max_length=3, choices=ROLES)
@@ -90,7 +90,7 @@ class Evento(models.Model):
     creador = models.ForeignKey(Semilla)
     fechaInicio = models.DateTimeField()
     fechaFin = models.DateTimeField()
-    semilleros = models.ForeignKey(Semillero, null=True)
+    semillero = models.ForeignKey(Semillero, null=True, blank=True)
     audiencia = models.CharField(max_length=4, choices=AUDIENCIA_CHOICES)
     creado = models.DateTimeField()
     actividades = models.ManyToManyField(Actividad)
